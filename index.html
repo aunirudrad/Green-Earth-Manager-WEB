@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Green Earth</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">🌳</span>
+                <span class="logo-text">Green Earth</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="trees.html" class="nav-link">Trees</a></li>
+                <li>
+                    <a href="cart.html" class="nav-link cart-link">
+                        🛒 Cart
+                        <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                    </a>
+                </li>
+            </ul>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="flash-message" id="flashMessage" style="display: none;">
+        <div class="flash-content">
+            <span id="flashText"></span>
+            <button class="flash-close" onclick="hideFlash()">&times;</button>
+        </div>
+    </div>
+    
+    <main class="main-content">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Plant a Tree, Grow a Future</h1>
+                <p>Join our mission to plant 1 million trees and make the Earth greener for future generations.</p>
+                <a href="trees.html" class="btn btn-primary">Explore Trees</a>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="section-title">
+                <h2>Why Plant Trees?</h2>
+                <p>Discover the incredible benefits of tree planting</p>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Combat Climate Change</h3>
+                    <p>Trees absorb CO2 and release oxygen, helping to reduce greenhouse gases and fight global warming.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🦋</div>
+                    <h3>Protect Wildlife</h3>
+                    <p>Forests provide essential habitats for countless species of birds, insects, and animals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💧</div>
+                    <h3>Preserve Water</h3>
+                    <p>Trees help maintain the water cycle, prevent soil erosion, and keep our rivers and streams clean.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏡</div>
+                    <h3>Support Communities</h3>
+                    <p>Tree planting creates jobs, provides resources, and improves the quality of life for local communities.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About Green Earth</h2>
+                    <p>Green Earth is a global tree plantation initiative dedicated to fighting climate change. Since our start, we've planted over 500,000 trees worldwide.</p>
+                    <p>By joining our campaign, you help restore forests, create habitats for wildlife, and combat global warming.</p>
+                    <ul>
+                        <li>Restoration of natural habitats</li>
+                        <li>Improvement of air quality</li>
+                        <li>Support for local communities</li>
+                        <li>Educational programs for sustainability</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=500" alt="Green forest">
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="section-title">
+                <h2>Featured Trees</h2>
+                <p>Explore some of our popular tree varieties</p>
+            </div>
+            
+            <div class="trees-grid" id="featuredTreesGrid">
+                <!-- Trees will be loaded dynamically -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="trees.html" class="btn btn-green">View All Trees</a>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">🌳</span>
+                    <span class="logo-text">Green Earth</span>
+                </div>
+                <p class="footer-text">Plant a Tree, Grow a Future. Join our mission to make the Earth greener for future generations.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> Green Earth. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Load featured trees (first 6)
+        document.addEventListener('DOMContentLoaded', function() {
+            const trees = getTrees().slice(0, 6);
+            const grid = document.getElementById('featuredTreesGrid');
+            grid.innerHTML = trees.map(tree => createTreeCard(tree)).join('');
+            updateCartBadge();
+        });
+    </script>
+</body>
+</html>

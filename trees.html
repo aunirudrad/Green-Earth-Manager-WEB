@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trees - Green Earth</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">🌳</span>
+                <span class="logo-text">Green Earth</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="trees.html" class="nav-link">Trees</a></li>
+                <li>
+                    <a href="cart.html" class="nav-link cart-link">
+                        🛒 Cart
+                        <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                    </a>
+                </li>
+            </ul>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="flash-message" id="flashMessage" style="display: none;">
+        <div class="flash-content">
+            <span id="flashText"></span>
+            <button class="flash-close" onclick="hideFlash()">&times;</button>
+        </div>
+    </div>
+    
+    <main class="main-content">
+        <section class="hero" style="padding: 60px 20px;">
+            <div class="hero-content">
+                <h1>Our Tree Collection</h1>
+                <p>Discover and buy a variety of trees from around the world</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search trees by name or scientific name...">
+            </div>
+
+            <div class="categories" id="categoriesContainer">
+                <!-- Categories will be loaded dynamically -->
+            </div>
+
+            <div class="trees-grid" id="treesGrid">
+                <!-- Trees will be loaded dynamically -->
+            </div>
+
+            <div id="noResults" class="no-results" style="display: none;">
+                <h3>No trees found</h3>
+                <p>Try adjusting your search or category filter</p>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">🌳</span>
+                    <span class="logo-text">Green Earth</span>
+                </div>
+                <p class="footer-text">Plant a Tree, Grow a Future. Join our mission to make the Earth greener for future generations.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> Green Earth. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        let currentCategory = 'All Trees';
+        let searchTerm = '';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load categories
+            const categories = getCategories();
+            const categoriesContainer = document.getElementById('categoriesContainer');
+            categoriesContainer.innerHTML = categories.map(cat => 
+                `<button class="category-btn ${cat === 'All Trees' ? 'active' : ''}" data-category="${cat}">${cat}</button>`
+            ).join('');
+            
+            // Add category click handlers
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.dataset.category;
+                    filterAndDisplayTrees();
+                });
+            });
+            
+            // Search handler
+            document.getElementById('searchInput').addEventListener('input', function() {
+                searchTerm = this.value.toLowerCase();
+                filterAndDisplayTrees();
+            });
+            
+            // Initial load
+            filterAndDisplayTrees();
+            updateCartBadge();
+        });
+        
+        function filterAndDisplayTrees() {
+            let trees = getTrees();
+            
+            // Filter by category
+            if (currentCategory !== 'All Trees') {
+                trees = trees.filter(tree => tree.category === currentCategory);
+            }
+            
+            // Filter by search
+            if (searchTerm) {
+                trees = trees.filter(tree => 
+                    tree.name.toLowerCase().includes(searchTerm) || 
+                    tree.scientific_name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            const grid = document.getElementById('treesGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (trees.length === 0) {
+                grid.innerHTML = '';
+                noResults.style.display = 'block';
+            } else {
+                grid.innerHTML = trees.map(tree => createTreeCard(tree, 'trees.html')).join('');
+                noResults.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

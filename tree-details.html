@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Details - Green Earth</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">🌳</span>
+                <span class="logo-text">Green Earth</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="trees.html" class="nav-link">Trees</a></li>
+                <li>
+                    <a href="cart.html" class="nav-link cart-link">
+                        🛒 Cart
+                        <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                    </a>
+                </li>
+            </ul>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="flash-message" id="flashMessage" style="display: none;">
+        <div class="flash-content">
+            <span id="flashText"></span>
+            <button class="flash-close" onclick="hideFlash()">&times;</button>
+        </div>
+    </div>
+    
+    <main class="main-content">
+        <div class="container">
+            <a href="trees.html" class="back-link">← Back to Trees</a>
+            
+            <div class="tree-detail" id="treeDetail">
+                <!-- Tree details will be loaded dynamically -->
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">🌳</span>
+                    <span class="logo-text">Green Earth</span>
+                </div>
+                <p class="footer-text">Plant a Tree, Grow a Future. Join our mission to make the Earth greener for future generations.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> Green Earth. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const treeId = parseInt(urlParams.get('id'));
+            
+            if (!treeId) {
+                window.location.href = 'trees.html';
+                return;
+            }
+            
+            const trees = getTrees();
+            const tree = trees.find(t => t.id === treeId);
+            
+            if (!tree) {
+                showFlash('Tree not found.', 'error');
+                setTimeout(() => window.location.href = 'trees.html', 2000);
+                return;
+            }
+            
+            document.title = tree.name + ' - Green Earth';
+            
+            document.getElementById('treeDetail').innerHTML = `
+                <img src="${sanitize(tree.image_url)}" alt="${sanitize(tree.name)}" class="tree-detail-image">
+                <div class="tree-detail-content">
+                    <h1>${sanitize(tree.name)}</h1>
+                    <p class="scientific-name">${sanitize(tree.scientific_name)}</p>
+                    <span class="category">${sanitize(tree.category)}</span>
+                    <p class="price-tag">৳${formatPrice(tree.price)}</p>
+                    <p class="description">${sanitize(tree.description)}</p>
+                    
+                    <div class="add-to-cart-form">
+                        <button onclick="addToCartAndNotify(${tree.id})" class="btn btn-green">Add to Cart</button>
+                        <a href="trees.html" class="btn" style="margin-left: 10px;">Continue Shopping</a>
+                    </div>
+                </div>
+            `;
+            
+            updateCartBadge();
+        });
+        
+        function addToCartAndNotify(treeId) {
+            addToCart(treeId);
+            updateCartBadge();
+            showFlash('Item added to cart!', 'success');
+        }
+    </script>
+</body>
+</html>
